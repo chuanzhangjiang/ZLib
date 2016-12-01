@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="network_activity_title">network包Sample</string>
+
+    <string name="network_btn_text_download_sample">下载sample</string>
+    <string name="network_btn_text_socket">Socket sample</string>
+
+    <!-- DownloadFragment -->
+    <string name="network_et_hint_url">请输入资源url</string>
+    <string name="network_btn_text_download">下载</string>
+    <string name="network_tv_text_url">url: </string>
+    <string name="network_tv_text_filename">文件名: </string>
+    <string name="network_et_hint_filename">请输入文件名(选填)</string>
+    <string name="network_tv_text_path">保存路径: </string>
+    <string name="network_et_hint_path">请输入保存路径(选填)</string>
+    <string name="network_btn_text_pause">暂停</string>
+    <string name="network_btn_text_start">开始</string>
+    <string name="network_btn_text_cancel">取消</string>
+
+    <!-- socket -->
+    <string name="network_socket_activity_title">socket测试</string>
+    <string name="network_socket_btn_text_open_server">打开SocketSever</string>
+    <string name="network_socket_btn_text_close_server">关闭SocketSever</string>
+    <string name="network_socket_et_hint_msg_input">请输入消息</string>
+    <string name="network_socket_btn_text_send">发送</string>
+</resources>

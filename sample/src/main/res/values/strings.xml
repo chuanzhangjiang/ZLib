@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ZLibSample</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="main_btn_text_network">network包Sample</string>
+    <string name="main_btn_text_rxbus">rxbus包Sample</string>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>
