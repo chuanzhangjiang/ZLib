@@ -4,7 +4,8 @@ android开发框架
 ##使用
 目前框架还在测试阶段，暂时没有发布到jcenter或是maven仓库, 使用的话导入zlib这个module进行使用。
 ![框架位置](/img/lib_location.png)
-
+##说明
+框架中的实例代码你可以在sample中找到，你可以运行sample在你的手机上，具体使用文档会在wiki中后陆续更新。
 
 ## licence
 >Licensed under the Apache License, Version 2.0 (the "License");
