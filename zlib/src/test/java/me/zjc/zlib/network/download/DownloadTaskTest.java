@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import me.zjc.zlib.common.schedulers.RxUnitTestUtils;
 import me.zjc.zlib.common.utils.Md5Utils;
-import me.zjc.zlib.network.download.DownloadInfo;
-import me.zjc.zlib.network.download.DownloadTask;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
@@ -32,7 +30,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.*;
