@@ -16,5 +16,6 @@ public interface BasePresenter {
      * 用于解除一些RxJava中的订阅资源
      * 在Fragment中的onDestroy()方法中调用
      */
+    @SuppressWarnings("unused")
     void unsubscribe();
 }

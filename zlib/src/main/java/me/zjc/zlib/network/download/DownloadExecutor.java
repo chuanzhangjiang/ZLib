@@ -2,7 +2,6 @@ package me.zjc.zlib.network.download;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -61,14 +60,11 @@ final class DownloadExecutor {
     };
 
     private final Func1<Response<ResponseBody>, Boolean> mErrorResponseFilter =
-            new Func1<Response<ResponseBody>, Boolean>() {
-                @Override
-                public Boolean call(Response<ResponseBody> responseBodyResponse) {
-                    if (!responseBodyResponse.isSuccessful()) {
-                        mErrorAction.call(new Exception(responseBodyResponse.message()));
-                    }
-                    return responseBodyResponse.isSuccessful();
+            responseBodyResponse -> {
+                if (!responseBodyResponse.isSuccessful()) {
+                    mErrorAction.call(new Exception(responseBodyResponse.message()));
                 }
+                return responseBodyResponse.isSuccessful();
             };
 
     private final Action0 mCompletedAction = new Action0() {
@@ -91,26 +87,16 @@ final class DownloadExecutor {
         resetStatus();
         mDownloadModel.download().
                 filter(mErrorResponseFilter).
-                map(new Func1<Response<ResponseBody>, ResponseBody>() {
-                    @Override
-                    public ResponseBody call(Response<ResponseBody> responseBodyResponse) {
-                        return responseBodyResponse.body();
-                    }
-                }).
-                subscribe(new Action1<ResponseBody>() {
-                    @Override
-                    public void call(final ResponseBody responseBody) {
-                        mContentLength = responseBody.contentLength();
-                        FunctionHelper.safeInvokeAction1InUiThread(mConnectSuccessListener,
-                                mContentLength, SchedulersProvides.getNormalSchedulerProvide());
+                map(Response::body).
+                subscribe(responseBody -> {
+                    mContentLength = responseBody.contentLength();
+                    FunctionHelper.safeInvokeAction1InUiThread(mConnectSuccessListener,
+                            mContentLength, SchedulersProvides.getNormalSchedulerProvide());
 
-                        saveFileFromInputStream(responseBody.byteStream(), new OutputStreamMaker() {
-                            @Override
-                            public OutputStream make() throws FileNotFoundException {
-                                return new FileOutputStream(new File(mPath + mFilename), false);
-                            }
-                        });
-                    }
+                    saveFileFromInputStream(
+                            responseBody.byteStream(),
+                            () -> new FileOutputStream(new File(mPath + mFilename), false)
+                    );
                 }, mErrorAction, mCompletedAction);
     }
 
@@ -118,23 +104,15 @@ final class DownloadExecutor {
         resetStatus();
         mDownloadModel.downloadFromPosition(currentProgress, mContentLength).
                 filter(mErrorResponseFilter).
-                map(new Func1<Response<ResponseBody>, ResponseBody>() {
-                    @Override
-                    public ResponseBody call(Response<ResponseBody> responseBodyResponse) {
-                        return responseBodyResponse.body();
-                    }
-                }).
-                subscribe(new Action1<ResponseBody>() {
-                    @Override
-                    public void call(ResponseBody responseBody) {
-                        saveFileFromInputStream(responseBody.byteStream(), new OutputStreamMaker() {
-                            @Override
-                            public OutputStream make() throws FileNotFoundException {
-                                return new FileOutputStream(new File(mPath + mFilename), true);
-                            }
-                        });
-                    }
-                }, mErrorAction, mCompletedAction);
+                map(Response::body).
+                subscribe(
+                        responseBody -> saveFileFromInputStream(
+                                responseBody.byteStream(),
+                                () -> new FileOutputStream(new File(mPath + mFilename), true)
+                        ),
+                        mErrorAction,
+                        mCompletedAction
+                );
     }
 
     private void resetStatus() {
@@ -176,7 +154,6 @@ final class DownloadExecutor {
 
                 mBus.onNext(info.setProgress(currentProgress += readLength));
 
-                Log.e("Download: ", currentProgress + "");
             }
         } catch (IOException e) {
             mBus.onError(e);
@@ -191,24 +168,11 @@ final class DownloadExecutor {
 
     private void deleteFile() {
         Observable.just(new File(mPath + mFilename))
-                .filter(new Func1<File, Boolean>() {
-                    @Override
-                    public Boolean call(File file) {
-                        return file.exists();
-                    }
-                })
-                .map(new Func1<File, Boolean>() {
-                    @Override
-                    public Boolean call(File file) {
-                        return file.delete();
-                    }
-                })
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean aBoolean) {
-                        if (!aBoolean) {
-                            System.err.print("delete file failure");
-                        }
+                .filter(File::exists)
+                .map(File::delete)
+                .subscribe(aBoolean -> {
+                    if (!aBoolean) {
+                        System.err.print("delete file failure");
                     }
                 });
     }

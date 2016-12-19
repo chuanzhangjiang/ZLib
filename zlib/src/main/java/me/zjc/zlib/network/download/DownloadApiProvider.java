@@ -17,11 +17,9 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 final class DownloadApiProvider {
     @GuardedBy("DownloadApiProvider.class")
     private static volatile DownloadApi mDownloadApi = null;
-
     private DownloadApiProvider() {
         throw new IllegalAccessError();
     }
-
     static DownloadApi getDefaultDownLoadApi() {
         if (mDownloadApi == null) {
             synchronized (DownloadApiProvider.class) {
@@ -52,13 +50,8 @@ final class DownloadApiProvider {
     }
 
     private static Interceptor loggerInterceptor() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(
-                new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        Log.e("HttpLogger: ", message);
-                    }
-                });
+        HttpLoggingInterceptor loggingInterceptor =
+                new HttpLoggingInterceptor(message -> Log.e("HttpLogger: ", message));
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         return loggingInterceptor;
     }

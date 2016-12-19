@@ -26,15 +26,10 @@ public class MainFragment extends BaseFragment {
     private void initNetworkButton(View contentView) {
         contentView.
                 findViewById(R.id.btn_network).
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        goNetworkActivity();
-                    }
-                });
+                setOnClickListener(this::goNetworkActivity);
     }
 
-    private void goNetworkActivity() {
+    private void goNetworkActivity(View view) {
         Intent intent = new Intent(getActivity(), NetworkActivity.class);
         startActivity(intent);
     }

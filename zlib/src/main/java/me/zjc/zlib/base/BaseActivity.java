@@ -65,11 +65,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 当从上一个Activity有参数传递过来的时候，覆盖这个方法
      * @param intent 从上一个Activity传递过来的intent
      */
-    protected void handlerIntent(Intent intent) {}
+    protected void handlerIntent(@SuppressWarnings("UnusedParameters") Intent intent) {}
 
     /**
      * 显示一个没有内容的ProgressDialog
      */
+    @SuppressWarnings("unused")
     protected void showProgressDialog() {
         mUiHelper.showProgressDialog();
     }
@@ -78,6 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 显示一个指定内容的ProgressDialog
      * @param content 显示的内容
      */
+    @SuppressWarnings("unused")
     protected void showProgressDialog(String content) {
         mUiHelper.showProgressDialog(content);
     }
@@ -85,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 隐藏等待弹窗
      */
+    @SuppressWarnings("unused")
     protected void dismissProgressDialog() {
         mUiHelper.dismissProgressDialog();
     }
@@ -93,6 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 显示一个短时常的Toast
      * @param content Toast显示的内容
      */
+    @SuppressWarnings("unused")
     protected void showToast(@NonNull String content) {
         mUiHelper.showToast(content);
     }
@@ -110,6 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param duration Toast显示的时常, 显示时长可以为{@link android.widget.Toast#LENGTH_SHORT}
      *                 或是 {@link android.widget.Toast#LENGTH_LONG}
      */
+    @SuppressWarnings("unused")
     protected void showToast(@NonNull String content, @ToastDuration int duration) {
         if (duration != Toast.LENGTH_SHORT && duration != Toast.LENGTH_LONG)
             throw new IllegalArgumentException("Illegal duration, duration need be " +
@@ -124,6 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param view 当前UI中的一个View
      * @param content 显示的内容
      */
+    @SuppressWarnings("unused")
     protected void showSnackBar(@NonNull View view, @NonNull String content) {
         mUiHelper.showSnackBar(view, content);
     }
@@ -136,6 +142,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      *                 或是 {@link android.support.design.widget.Snackbar#LENGTH_LONG}
      *                 或是 {@link android.support.design.widget.Snackbar#LENGTH_INDEFINITE}
      */
+    @SuppressWarnings("unused")
     protected void showSnackBar(@NonNull View view, @NonNull String content,
                                 @Snackbar.Duration int duration) {
         if (duration != Snackbar.LENGTH_SHORT && duration != Snackbar.LENGTH_LONG
@@ -152,6 +159,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 获取一个Activity的简单标签
      * 不加包名的名字
      */
+    @SuppressWarnings("unused")
     public String getSimpleTag() {
         return getClass().getSimpleName();
     }
@@ -160,6 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 获取Activity的全名
      * 包名+类名
      */
+    @SuppressWarnings("unused")
     public String getTag() {
         return getClass().getName();
     }

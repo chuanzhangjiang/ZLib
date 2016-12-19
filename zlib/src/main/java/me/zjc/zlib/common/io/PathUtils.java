@@ -19,7 +19,7 @@ public final class PathUtils {
      */
     public static String getDefaultDownloadPath() {
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                .getAbsolutePath() + "/";
+                .getAbsolutePath() + File.separator;
     }
 
     /**

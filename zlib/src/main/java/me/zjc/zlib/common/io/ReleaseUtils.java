@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
-
 /**
  * Created by ChuanZhangjiang on 2016/8/7.
  * 资源释放工具，用于IO操作结束的时候释放资源
@@ -25,20 +22,12 @@ public final class ReleaseUtils {
      */
     public static void flushAll(Flushable... flushes) {
         Observable.from(flushes).
-                filter(new Func1<Flushable, Boolean>() {
-                    @Override
-                    public Boolean call(Flushable flushable) {
-                        return flushable != null;
-                    }
-                }).
-                subscribe(new Action1<Flushable>() {
-                    @Override
-                    public void call(Flushable flushable) {
-                        try {
-                            flushable.flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                filter(flushable -> flushable != null).
+                subscribe(flushable -> {
+                    try {
+                        flushable.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
     }
@@ -48,22 +37,15 @@ public final class ReleaseUtils {
      * 从集合的第一个元素开始刷新
      * @param flushes 被刷新的集合
      */
+    @SuppressWarnings("WeakerAccess")
     public static void flushAll(Collection<? extends Flushable> flushes) {
         Observable.from(flushes).
-                filter(new Func1<Flushable, Boolean>() {
-                    @Override
-                    public Boolean call(Flushable flushable) {
-                        return flushable != null;
-                    }
-                }).
-                subscribe(new Action1<Flushable>() {
-                    @Override
-                    public void call(Flushable flushable) {
-                        try {
-                            flushable.flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                filter(flushable -> flushable != null).
+                subscribe(flushable -> {
+                    try {
+                        flushable.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
     }
@@ -75,20 +57,12 @@ public final class ReleaseUtils {
      */
     public static void closeAll(Closeable... closeables) {
         Observable.from(closeables).
-                filter(new Func1<Closeable, Boolean>() {
-                    @Override
-                    public Boolean call(Closeable closeable) {
-                        return closeable != null;
-                    }
-                }).
-                subscribe(new Action1<Closeable>() {
-                    @Override
-                    public void call(Closeable closeable) {
-                        try {
-                            closeable.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                filter(closeable -> closeable != null).
+                subscribe(closeable -> {
+                    try {
+                        closeable.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
     }
@@ -98,22 +72,15 @@ public final class ReleaseUtils {
      * 刷新顺序：从集合的第一个元素开始
      * @param closeables 被关闭的对象
      */
+    @SuppressWarnings("WeakerAccess")
     public static void closeAll(Collection<? extends Closeable> closeables) {
         Observable.from(closeables).
-                filter(new Func1<Closeable, Boolean>() {
-                    @Override
-                    public Boolean call(Closeable closeable) {
-                        return closeable != null;
-                    }
-                }).
-                subscribe(new Action1<Closeable>() {
-                    @Override
-                    public void call(Closeable closeable) {
-                        try {
-                            closeable.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                filter(closeable -> closeable != null).
+                subscribe(closeable -> {
+                    try {
+                        closeable.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
     }

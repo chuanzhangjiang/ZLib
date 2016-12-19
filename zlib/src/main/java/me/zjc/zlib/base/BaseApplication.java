@@ -8,12 +8,20 @@ import android.os.StrictMode;
  *
  */
 
-public class BaseApplication extends Application {
+public abstract class BaseApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (isDebug()) {
+            openStrictMode();
+        }
+    }
 
     /**
      * 开启严格模式
      */
-    protected void openStrictMode() {
+    protected final void openStrictMode() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
                 .detectDiskWrites()
@@ -29,4 +37,6 @@ public class BaseApplication extends Application {
                 //.penaltyDeath()
                 .build());
     }
+
+    public abstract boolean isDebug();
 }

@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 import rx.Observable;
-import rx.Subscriber;
 
 public final class SocketFactory {
 
@@ -22,6 +21,7 @@ public final class SocketFactory {
      * @return 一个socket客户端
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public static ISocketClient getClient(String host, int port, @Nullable Charset serverCharset)
             throws IOException {
         return getClient(new Socket(host, port), serverCharset);
@@ -43,6 +43,7 @@ public final class SocketFactory {
      * 将一个socket客户端包装成一个ISocketClient{@link ISocketClient}
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public static ISocketClient getClient(Socket socket, Charset serverCharset) throws IOException {
         Charset charset = serverCharset;
         if (charset == null)
@@ -61,18 +62,16 @@ public final class SocketFactory {
      * @param serverCharset 服务器编码
      * @return 包装了socket客户端的Observable
      */
+    @SuppressWarnings("WeakerAccess")
     public static Observable<ISocketClient> getClientObservable(final String host, final int port,
                                                                 @Nullable final Charset serverCharset) {
-        return Observable.create(new Observable.OnSubscribe<ISocketClient>() {
-            @Override
-            public void call(Subscriber<? super ISocketClient> subscriber) {
-                try {
-                    subscriber.onNext(getClient(host, port, serverCharset));
-                } catch (IOException e) {
-                    subscriber.onError(e);
-                }
-                subscriber.onCompleted();
+        return Observable.create(subscriber -> {
+            try {
+                subscriber.onNext(getClient(host, port, serverCharset));
+            } catch (IOException e) {
+                subscriber.onError(e);
             }
+            subscriber.onCompleted();
         });
     }
 

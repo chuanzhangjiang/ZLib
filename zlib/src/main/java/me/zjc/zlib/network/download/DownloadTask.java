@@ -30,6 +30,7 @@ public final class DownloadTask {
         mStatus = Status.READY;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public DownloadTask onDownloadFinish(Action0 listener) {
         mExecutor.setDownloadFinishListener(listener);
         return this;
@@ -89,6 +90,7 @@ public final class DownloadTask {
      * 克隆一个与当前任务具有相同配置的任务
      * @return 克隆之后的任务
      */
+    @SuppressWarnings("WeakerAccess")
     public DownloadTask selfClone() {
         return mBuilder.build();
     }
@@ -167,6 +169,7 @@ public final class DownloadTask {
          * @param interceptors 拦截器{@link Interceptor}
          * @return 自生
          */
+        @SuppressWarnings("WeakerAccess")
         public DownloadBuilder setInterceptors(@NonNull Interceptor... interceptors) {
             this.api = DownloadApiProvider.newDownloadApi(interceptors);
             return this;

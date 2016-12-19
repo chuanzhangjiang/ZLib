@@ -40,12 +40,7 @@ final class UiAptActClient extends ForwardSocket {
 
         @Override
         public void call(final T x) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    action1.call(x);
-                }
-            });
+            handler.post(() -> action1.call(x));
         }
 
         void removeAction() {

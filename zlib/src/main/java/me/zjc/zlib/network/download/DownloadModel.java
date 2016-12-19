@@ -7,7 +7,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.Result;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -29,15 +28,7 @@ final class DownloadModel {
         return mApi.download(mUrl).
                 subscribeOn(Schedulers.io()).
                 observeOn(Schedulers.io()).
-                map(new Func1<Result<ResponseBody>, Response<ResponseBody>>() {
-                    @Override
-                    public Response<ResponseBody> call(Result<ResponseBody> responseBodyResult) {
-                        System.out.println(responseBodyResult.isError());
-                        System.out.println(responseBodyResult.error());
-                        System.out.println(responseBodyResult.response());
-                        return responseBodyResult.response();
-                    }
-                }).
+                map(Result::response).
                 onBackpressureBuffer();
     }
 
@@ -45,14 +36,10 @@ final class DownloadModel {
         return mApi.continueDownload(mUrl, generateRangeData(position, contentLength)).
                 subscribeOn(Schedulers.io()).
                 observeOn(Schedulers.io()).
-                map(new Func1<Result<ResponseBody>, Response<ResponseBody>>() {
-                    @Override
-                    public Response<ResponseBody> call(Result<ResponseBody> responseBodyResult) {
-                        return responseBodyResult.response();
-                    }
-                }).
+                map(Result::response).
                 onBackpressureBuffer();
     }
+
     private String generateRangeData(long start, long end) {
         return "bytes=" + start + "-" + end;
     }

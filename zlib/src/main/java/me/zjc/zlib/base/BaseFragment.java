@@ -16,8 +16,6 @@ import me.zjc.zlib.common.utils.ArgumentChecker;
 import rx.Subscription;
 import rx.internal.util.SubscriptionList;
 
-import static me.zjc.zlib.common.utils.ArgumentChecker.checkNotNull;
-
 /**
  * Created by ChuanZhangjiang on 2016/8/4.
  * Base class for Fragment in project
@@ -72,6 +70,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 显示一个ProgressDialog,没有提示内容
      */
+    @SuppressWarnings("unused")
     protected void showProgressDialog() {
         mUiHelper.showProgressDialog();
     }
@@ -80,6 +79,7 @@ public abstract class BaseFragment extends Fragment {
      * 显示一个ProgressDialog
      * @param msg 提示信息
      */
+    @SuppressWarnings("unused")
     protected void showProgressDialog(String msg) {
         mUiHelper.showProgressDialog(msg);
     }
@@ -87,6 +87,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 取消ProgressDialog的显示
      */
+    @SuppressWarnings("unused")
     protected void dismissProgressDialog() {
         mUiHelper.dismissProgressDialog();
     }
@@ -96,6 +97,7 @@ public abstract class BaseFragment extends Fragment {
      * 默认时常为{@link android.widget.Toast#LENGTH_SHORT}
      * @param msg 显示的消息.
      */
+    @SuppressWarnings("unused")
     protected void showToast(String msg) {
         mUiHelper.showToast(msg);
     }
@@ -106,6 +108,7 @@ public abstract class BaseFragment extends Fragment {
      * @param duration 显示的时长，显示时长可以为{@link android.widget.Toast#LENGTH_SHORT}
      *                 或是 {@link android.widget.Toast#LENGTH_LONG}
      */
+    @SuppressWarnings("unused")
     protected void showToast(String msg, @BaseActivity.ToastDuration int duration) {
         mUiHelper.showToast(msg, duration);
     }
@@ -117,6 +120,7 @@ public abstract class BaseFragment extends Fragment {
      *                 或是 {@link android.support.design.widget.Snackbar#LENGTH_LONG}
      *                 或是 {@link android.support.design.widget.Snackbar#LENGTH_INDEFINITE}
      */
+    @SuppressWarnings("unused")
     protected void showSnackBar(String msg, @Snackbar.Duration int duration) {
         mUiHelper.showSnackBar(ArgumentChecker.checkNotNull(getView()), msg, duration);
     }
@@ -134,14 +138,17 @@ public abstract class BaseFragment extends Fragment {
         return DimenUtils.dip2px(getContext(), dip);
     }
 
+    @SuppressWarnings("unused")
     protected int px2dip(int px) {
         return DimenUtils.px2dip(getContext(), px);
     }
 
+    @SuppressWarnings("unused")
     protected int sp2px(int sp) {
         return DimenUtils.sp2px(getContext(), sp);
     }
 
+    @SuppressWarnings("unused")
     protected int px2sp(int px) {
         return DimenUtils.px2sp(getContext(), px);
     }

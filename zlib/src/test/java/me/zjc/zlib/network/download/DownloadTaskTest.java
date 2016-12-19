@@ -68,18 +68,10 @@ public class DownloadTaskTest {
     @After
     public void tearDown() throws Exception {
         Observable.just(new File(TEST_DOWNLOAD_FILE_PATH + DOWNLOAD_FILE_NAME))
-                .filter(new Func1<File, Boolean>() {
-                    @Override
-                    public Boolean call(File file) {
-                        return file.exists();
-                    }
-                })
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        if (!file.delete())
-                            throw new RuntimeException("delete file fail");
-                    }
+                .filter(File::exists)
+                .subscribe(file -> {
+                    if (!file.delete())
+                        throw new RuntimeException("delete file fail");
                 });
     }
 
@@ -120,11 +112,8 @@ public class DownloadTaskTest {
         Observable.timer(100, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.immediate())
-                .subscribe(new Action1<Long>() {
-                    @Override
-                    public void call(Long aLong) {
-                        task.pause();
-                    }
+                .subscribe(aLong -> {
+                    task.pause();
                 });
         task.start();
         assertTrue(checkedDownloadedFileExists());
@@ -156,11 +145,8 @@ public class DownloadTaskTest {
         Observable.timer(100, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.immediate())
-                .subscribe(new Action1<Long>() {
-                    @Override
-                    public void call(Long aLong) {
-                        task.cancel();
-                    }
+                .subscribe(aLong -> {
+                    task.cancel();
                 });
         task.start();
         assertFalse(checkedDownloadedFileExists());

@@ -27,6 +27,7 @@ public final class DownloadInfo {
      * get contentLength of current source
      * @return contentLength of current source
      */
+    @SuppressWarnings("WeakerAccess")
     public long getContentLength() {
         return contentLength;
     }

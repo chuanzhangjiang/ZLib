@@ -11,11 +11,8 @@ final class AsyncAcceptClient extends ForwardSocket {
 
     @Override
     public void accept(final Action1<String> action1) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AsyncAcceptClient.super.accept(action1);
-            }
+        new Thread(() -> {
+            AsyncAcceptClient.super.accept(action1);
         }).start();
     }
 }

@@ -1,8 +1,6 @@
 package me.zjc.zlib.common.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -37,7 +35,7 @@ public final class Md5Utils {
             messageDigest = MessageDigest.getInstance("MD5");
             randomAccessFile=new RandomAccessFile(file,"r");
             byte[] bytes=new byte[1024*1024*10];
-            int len = 0;
+            int len;
             while ((len=randomAccessFile.read(bytes))!=-1){
                 messageDigest.update(bytes,0, len);
             }
@@ -66,6 +64,7 @@ public final class Md5Utils {
      * @param s 被计算的字符串
      * @return MD5值
      */
+    @SuppressWarnings("WeakerAccess")
     public static String getStringMD5String(String s) {
         char hexDigits[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
         try {
