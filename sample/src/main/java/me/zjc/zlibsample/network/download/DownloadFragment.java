@@ -13,8 +13,6 @@ import java.util.Map;
 
 import me.zjc.zlib.base.BaseFragment;
 import me.zjc.zlibsample.R;
-import rx.functions.Action0;
-import rx.functions.Action1;
 
 /**
  * Created by ChuanZhangjiang on 2016/11/20.
@@ -35,14 +33,11 @@ public final class DownloadFragment extends BaseFragment implements DownloadSamp
         mDownloadContainer = (LinearLayout) contentView.findViewById(R.id.ll_container);
         mDownloadConfigView = (DownloadConfigView) contentView.findViewById(R.id.view_download_config);
 
-        mDownloadConfigView.listenerDownloadButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    checkPermissionAndDownload();
-                } else {
-                    performanceDownload();
-                }
+        mDownloadConfigView.listenerDownloadButton(view -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                checkPermissionAndDownload();
+            } else {
+                performanceDownload();
             }
         });
     }
@@ -60,17 +55,14 @@ public final class DownloadFragment extends BaseFragment implements DownloadSamp
         rxPermissions().
                 request(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE).
-                subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean isGranted) {
-                        if (isGranted) {
-                            showSnackBar("有权限");
-                            Log.e(getFragmentTag(), "有权限");
-                            performanceDownload();
-                        } else {
-                            showSnackBar("没有权限");
-                            Log.e(getFragmentTag(), "没权限");
-                        }
+                subscribe(isGranted -> {
+                    if (isGranted) {
+                        showSnackBar("有权限");
+                        Log.e(getFragmentTag(), "有权限");
+                        performanceDownload();
+                    } else {
+                        showSnackBar("没有权限");
+                        Log.e(getFragmentTag(), "没权限");
                     }
                 });
     }
@@ -99,24 +91,15 @@ public final class DownloadFragment extends BaseFragment implements DownloadSamp
 
     private void listenerDownloadItemView(final DownloadItemView itemView,
                                           final String taskId) {
-        itemView.setPauseClickListener(new Action0() {
-            @Override
-            public void call() {
-                itemView.toPauseStatus();
-                mPresenter.pauseTask(taskId);
-            }
-        }).setStartClickListener(new Action0() {
-            @Override
-            public void call() {
-                itemView.toStartedStatus();
-                mPresenter.startTask(taskId);
-            }
-        }).setCancelClickListener(new Action0() {
-            @Override
-            public void call() {
-                itemView.toCancelStatus();
-                mPresenter.cancelTask(taskId);
-            }
+        itemView.setPauseClickListener(() -> {
+            itemView.toPauseStatus();
+            mPresenter.pauseTask(taskId);
+        }).setStartClickListener(() -> {
+            itemView.toStartedStatus();
+            mPresenter.startTask(taskId);
+        }).setCancelClickListener(() -> {
+            itemView.toCancelStatus();
+            mPresenter.cancelTask(taskId);
         });
     }
 

@@ -21,7 +21,7 @@ public class PathUtilsTest extends TestCase {
     @SuppressWarnings("unused")
     public static final String TAG = PathUtilsTest.class.getSimpleName();
 
-    private static final String defaultDownloadPath = "/storage/emulated/0/Download";
+    private static final String defaultDownloadPath = "/storage/emulated/0/Download/";
 
     @Test
     public void testGetDefaultDownloadPath() throws Exception {

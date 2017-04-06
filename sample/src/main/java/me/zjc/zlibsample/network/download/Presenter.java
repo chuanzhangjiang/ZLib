@@ -10,7 +10,6 @@ import me.zjc.zlib.network.download.DownloadInfo;
 import me.zjc.zlib.network.download.DownloadTask;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 import static me.zjc.zlib.common.utils.ArgumentChecker.checkNotNull;
@@ -62,12 +61,8 @@ public final class Presenter implements DownloadSampleContract.Presenter {
     }
 
     private Subscription listenerTask(final DownloadTask task) {
-        task.setOnConnectSuccessListener(new Action1<Long>() {
-            @Override
-            public void call(Long contentLength) {
-                mDownloadView.setProgressMax(task.getId(), contentLength);
-            }
-        });
+        task.setOnConnectSuccessListener(contentLength ->
+                mDownloadView.setProgressMax(task.getId(), contentLength));
 
         return task.toObservable()
                 .subscribeOn(mSchedulersProvide.io())

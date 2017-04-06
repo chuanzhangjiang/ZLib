@@ -23,6 +23,42 @@ public final class PathUtils {
     }
 
     /**
+     * 获取默认照片存储目录
+     */
+    @SuppressWarnings("unused")
+    public static String getDefaultPhotoPath() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).
+                getAbsolutePath() + File.separator;
+    }
+
+    /**
+     * 获取默认图片存储目录
+     */
+    @SuppressWarnings("unused")
+    public String getDefaultPicturePath() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).
+                getAbsolutePath() + File.separator;
+    }
+
+    /**
+     * 获取默认的音乐存储目录
+     */
+    @SuppressWarnings("unused")
+    public String getDefaultMusicPath() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).
+                getAbsolutePath() + File.separator;
+    }
+
+    /**
+     * 获取默认电影存储目录
+     */
+    @SuppressWarnings("unused")
+    public String getDefaultMoviePath() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).
+                getAbsolutePath() + File.separator;
+    }
+
+    /**
      * 如果不存在，则创建目录
      * 存在返回true
      * 创建成功返回true

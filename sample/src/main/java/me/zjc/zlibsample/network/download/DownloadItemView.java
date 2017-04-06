@@ -8,9 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import me.zjc.zlib.common.functions.FunctionHelper;
 import me.zjc.zlibsample.R;
 import rx.functions.Action0;
+
+import static me.zjc.zlib.common.functions.FunctionHelper.safeInvokeAction0;
 
 /**
  * Created by ChuanZhangjiang on 2016/11/21.
@@ -105,26 +106,11 @@ public final class DownloadItemView extends CardView {
     }
 
     private void listenerEvent() {
-        mPauseBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FunctionHelper.safeInvokeAction0(mPauseClickCallBack);
-            }
-        });
+        mPauseBtn.setOnClickListener(view -> safeInvokeAction0(mPauseClickCallBack));
 
-        mStartBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FunctionHelper.safeInvokeAction0(mStartClickCallBack);
-            }
-        });
+        mStartBtn.setOnClickListener(view -> safeInvokeAction0(mStartClickCallBack));
 
-        mCancelBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FunctionHelper.safeInvokeAction0(mCancelClickCallBack);
-            }
-        });
+        mCancelBtn.setOnClickListener(view -> safeInvokeAction0(mCancelClickCallBack));
     }
 
     @Override

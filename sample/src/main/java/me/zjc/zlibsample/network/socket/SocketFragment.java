@@ -47,15 +47,12 @@ public final class SocketFragment extends BaseFragment {
     private void listenerSocketServer() {
         Subscription subscription =
                 Rxbus.INSTANCE.toObservable(SocketServerService.Event.class).
-                        subscribe(new Action1<SocketServerService.Event>() {
-                            @Override
-                            public void call(SocketServerService.Event event) {
-                                if (event == SocketServerService.Event.SERVER_CLOSE) {
-                                    releaseConnect();
-                                    setServerCloseStatus();
-                                } else if (event == SocketServerService.Event.SERVER_START) {
-                                    connectServer();
-                                }
+                        subscribe(event -> {
+                            if (event == SocketServerService.Event.SERVER_CLOSE) {
+                                releaseConnect();
+                                setServerCloseStatus();
+                            } else if (event == SocketServerService.Event.SERVER_START) {
+                                connectServer();
                             }
                         });
         manageSubscription(subscription);
@@ -66,23 +63,12 @@ public final class SocketFragment extends BaseFragment {
                 SocketServerService.SERVER_PORT).
                 subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread()).
-                subscribe(new Action1<ISocketClient>() {
-                    @Override
-                    public void call(ISocketClient iSocketClient) {onConnectSuccess(iSocketClient);
-                    }
+                subscribe(client -> {
+                    mClient = client.asyncLoopAccept().doAcceptActionOnMainThread();
+                    mClient.accept(s -> mReceivedMsgEt.append(s + "\n"));
+                    setServerOpenStatus();
                 }, mErrorAction);
         manageSubscription(subscription);
-    }
-
-    private void onConnectSuccess(ISocketClient client) {
-        mClient = client.asyncLoopAccept().doAcceptActionOnMainThread();
-        mClient.accept(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                mReceivedMsgEt.append(s + "\n");
-            }
-        });
-        setServerOpenStatus();
     }
 
     private void releaseConnect() {
@@ -128,26 +114,20 @@ public final class SocketFragment extends BaseFragment {
     }
 
     private void listenerButton() {
-        mToggleServerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (serverIsStart) {
-                    closeServer();
-                } else {
-                    startServer();
-                }
-                setTransitionStatus();
+        mToggleServerBtn.setOnClickListener(v -> {
+            if (serverIsStart) {
+                closeServer();
+            } else {
+                startServer();
             }
+            setTransitionStatus();
         });
 
-        mSendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClient != null) {
-                    mClient.send(mInputMsgEt.getText().toString());
-                }
-                mInputMsgEt.setText("");
+        mSendBtn.setOnClickListener(v -> {
+            if (mClient != null) {
+                mClient.send(mInputMsgEt.getText().toString());
             }
+            mInputMsgEt.setText("");
         });
     }
 
@@ -176,12 +156,7 @@ public final class SocketFragment extends BaseFragment {
         Rxbus.INSTANCE.post(Event.START_SOCKET_SERVER);
     }
 
-    private final Action1<Throwable> mErrorAction = new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    };
+    private final Action1<Throwable> mErrorAction = Throwable::printStackTrace;
 
     public enum Event {
         START_SOCKET_SERVER
