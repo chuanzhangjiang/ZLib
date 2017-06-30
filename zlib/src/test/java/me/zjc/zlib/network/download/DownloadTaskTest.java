@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import me.zjc.zlib.common.schedulers.RxUnitTestUtils;
 import me.zjc.zlib.common.utils.Md5Utils;
@@ -30,7 +29,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.atLeastOnce;
@@ -39,14 +37,15 @@ import static org.mockito.Mockito.verify;
 
 /**
  * Created by ChuanZhangjiang on 2016/11/15.
- *
+ * 下载测试类，
+ * 提示: 系统不同可能会导致文件路径不同
  */
 public class DownloadTaskTest {
     private DownloadTask task;
     private static final String DOWNLOAD_FILE_NAME = "download.svg";
     private static final String url = "http://www.someurl.com/file.svg";
-    private static final String TEST_SRC_FILE_PATH = "testFile/src.svg";
-    private static final String TEST_DOWNLOAD_FILE_PATH = "testFile/download/";
+    private static final String TEST_SRC_FILE_PATH = "zlib/testFile/src.svg";
+    private static final String TEST_DOWNLOAD_FILE_PATH = "zlib/testFile/download/";
 
     @Mock
     private Action0 mockDownloadFinishListener;
@@ -72,10 +71,6 @@ public class DownloadTaskTest {
                 });
     }
 
-    /**
-     * test most simple download
-     * @throws Exception
-     */
     @Test
     public void testDownload() throws Exception {
         task.start();
@@ -91,11 +86,6 @@ public class DownloadTaskTest {
         assertEquals(srcFileMd5, downloadedFileMd5);
     }
 
-    /**
-     * test the method
-     * {@link Action0}
-     * @throws Exception
-     */
     @Test
     public void testDownloadFinishListener() throws Exception {
         task.onDownloadFinish(mockDownloadFinishListener)
@@ -106,15 +96,16 @@ public class DownloadTaskTest {
 
     @Test
     public void testPause() throws Exception {
-        Observable.timer(100, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
-                .subscribe(aLong -> {
-                    task.pause();
-                });
+        task.toObservable().subscribe(info -> {
+            if (info.getProgress() > 100) {
+                task.pause();
+            }
+        }, error -> fail(error.getMessage()), () -> {
+            assertTrue(checkedDownloadedFileExists());
+            assertFalse(checkFileEqual());
+        });
         task.start();
-        assertTrue(checkedDownloadedFileExists());
-        assertFalse(checkFileEqual());
+
     }
 
     private boolean checkedDownloadedFileExists(){
@@ -139,28 +130,29 @@ public class DownloadTaskTest {
 
     @Test
     public void testCancel() throws Exception {
-        Observable.timer(100, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
-                .subscribe(aLong -> {
-                    task.cancel();
-                });
+        task.toObservable().subscribe(downloadInfo -> {
+            if (downloadInfo.getProgress() > 100) {
+                task.cancel();
+            }
+        }, error -> fail(error.getMessage()), () -> {
+            //验证
+            assertFalse(checkedDownloadedFileExists());
+            try{
+                task.start();
+                fail();
+            } catch (Exception e) {
+                assertTrue(e.getClass() == IllegalStateException.class);
+                assertEquals("only clear task can be start", e.getMessage());
+            }
+            try {
+                task.continueDownload();
+                fail();
+            } catch (Exception e) {
+                assertTrue(e.getClass() == IllegalStateException.class);
+                assertEquals("only paused task can be continue", e.getMessage());
+            }
+        });
         task.start();
-        assertFalse(checkedDownloadedFileExists());
-        try{
-            task.start();
-            fail();
-        } catch (Exception e) {
-            assertTrue(e.getClass() == IllegalStateException.class);
-            assertEquals("only clear task can be start", e.getMessage());
-        }
-        try {
-            task.continueDownload();
-            fail();
-        } catch (Exception e) {
-            assertTrue(e.getClass() == IllegalStateException.class);
-            assertEquals("only paused task can be continue", e.getMessage());
-        }
     }
 
     @Test

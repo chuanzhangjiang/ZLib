@@ -106,7 +106,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     @IntDef({Toast.LENGTH_SHORT, Toast.LENGTH_LONG})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ToastDuration{}
+    @interface ToastDuration{}
 
     /**
      * 显示一个Toast

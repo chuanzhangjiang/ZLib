@@ -35,13 +35,16 @@ final class DownloadExecutor {
     private final String mFilename;
     private final String mPath;
     private final Subject<DownloadInfo, DownloadInfo> mBus;
+    private final Action1<Throwable> mErrorAction;
+    private final Func1<Response<ResponseBody>, Boolean> mErrorResponseFilter;
+    private final Action0 mCompletedAction;
 
     private volatile boolean isPause = false;
+
     private volatile boolean isCancel = false;
-
     private long currentProgress = 0L;
-    private long mContentLength = -1L;
 
+    private long mContentLength = -1L;
     private Action0 mDownloadFinishListener;
 
     DownloadExecutor(@NonNull DownloadModel model, @NonNull String filename, @NonNull String path) {
@@ -49,34 +52,24 @@ final class DownloadExecutor {
         this.mFilename = filename;
         this.mPath = path;
         this.mBus = new SerializedSubject<>(PublishSubject.<DownloadInfo>create());
-    }
-
-    private final Action1<Throwable> mErrorAction = new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
+        mErrorAction = throwable -> {
             cancel();
             mBus.onError(throwable);
-        }
-    };
-
-    private final Func1<Response<ResponseBody>, Boolean> mErrorResponseFilter =
-            responseBodyResponse -> {
-                if (!responseBodyResponse.isSuccessful()) {
-                    mErrorAction.call(new Exception(responseBodyResponse.message()));
-                }
-                return responseBodyResponse.isSuccessful();
-            };
-
-    private final Action0 mCompletedAction = new Action0() {
-        @Override
-        public void call() {
-            if (isPause || isCancel)
-                return;
+        };
+        mErrorResponseFilter = responseBodyResponse -> {
+            if (!responseBodyResponse.isSuccessful()) {
+                mErrorAction.call(new Exception(responseBodyResponse.message()));
+            }
+            return responseBodyResponse.isSuccessful();
+        };
+        mCompletedAction = () -> {
+//            if (isPause || isCancel)
+//                return;
             mBus.onCompleted();
             if (mDownloadFinishListener != null)
                 mDownloadFinishListener.call();
-        }
-    };
+        };
+    }
 
     private Action1<Long> mConnectSuccessListener;
     void setOnConnectSuccessListener(Action1<Long> listener){

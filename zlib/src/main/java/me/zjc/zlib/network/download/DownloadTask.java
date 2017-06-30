@@ -31,6 +31,9 @@ public final class DownloadTask {
     }
 
     @SuppressWarnings("WeakerAccess")
+    /**
+     * 下载结束时会被回掉，暂停或是取消也会进入回掉
+     */
     public DownloadTask onDownloadFinish(Action0 listener) {
         mExecutor.setDownloadFinishListener(listener);
         return this;
@@ -128,7 +131,6 @@ public final class DownloadTask {
      * 下载任务构建器
      * 如果没有设置文件名，则默认使用url中的后缀
      * 如果没有设置路径则默认下载到“/storage/emulated/0/Download”
-     * 如果没有设置监听，则不回调
      */
     public static class DownloadBuilder {
         private final String url;
