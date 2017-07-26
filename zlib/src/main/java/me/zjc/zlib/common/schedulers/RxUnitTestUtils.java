@@ -12,7 +12,7 @@ import rx.schedulers.Schedulers;
  *
  */
 public class RxUnitTestUtils {
-    private static boolean isInitRxTools = false;
+    private static volatile boolean isInitRxTools = false;
 
     private RxUnitTestUtils() {
         throw new IllegalAccessError();

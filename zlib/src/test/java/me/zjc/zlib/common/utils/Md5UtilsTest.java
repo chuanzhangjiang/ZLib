@@ -4,8 +4,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-import me.zjc.zlib.common.utils.Md5Utils;
-
 import static org.junit.Assert.*;
 
 /**
@@ -16,7 +14,7 @@ public class Md5UtilsTest {
     @Test
     public void getFileMd5String() throws Exception {
         final String exceptMD5 = "AAA23AFEC751E0CFEF1B47C910BB0FDC";
-        final String actMD5 = Md5Utils.getFileMd5String(new File("testFile/src.svg"));
+        final String actMD5 = Md5Utils.getFileMd5String(new File("zlib/testFile/src.svg"));
         assertEquals(exceptMD5, actMD5);
     }
 
