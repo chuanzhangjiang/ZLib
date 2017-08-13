@@ -19,6 +19,7 @@ public abstract class Option<V> {
     }
 
     public abstract V get();
+    public abstract V getOrElse(V elseValue);
     public abstract boolean isNothing();
 
     public static class Nothing<VV> extends Option<VV> {
@@ -26,6 +27,11 @@ public abstract class Option<V> {
         @Override
         public VV get() {
             throw new AssertionError("noting not support method #get()");
+        }
+
+        @Override
+        public VV getOrElse(VV elseValue) {
+            return elseValue;
         }
 
         @Override
@@ -42,6 +48,11 @@ public abstract class Option<V> {
 
         @Override
         public VV get() {
+            return mValue;
+        }
+
+        @Override
+        public VV getOrElse(VV elseValue) {
             return mValue;
         }
 

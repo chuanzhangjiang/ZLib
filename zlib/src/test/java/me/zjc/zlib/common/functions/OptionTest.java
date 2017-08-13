@@ -24,6 +24,12 @@ public class OptionTest {
     }
 
     @Test
+    public void getOrElseTest() throws Exception {
+        assertEquals(some.getOrElse("nothing"), someValue);
+        assertEquals(nothing.getOrElse("nothing"), "nothing");
+    }
+
+    @Test
     public void isNothing() throws Exception {
         assertTrue(nothing.isNothing());
         assertTrue(!some.isNothing());
